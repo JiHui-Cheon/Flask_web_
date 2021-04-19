@@ -21,8 +21,10 @@ def articles():
 
 @app.route('/article/<int:id>') #params를 써먹음...params..? <>를하고 변수를 이용한다.
 def article(id):
-    print(id)
-    return "Success"
+    articles=Articles()
+    article = articles[id-1]
+    print(articles[id-1])
+    return render_template("article.html", article = article)
 
 if __name__ == '__main__': # 처음 서버 띄울때 쓰임.
     app.run()
