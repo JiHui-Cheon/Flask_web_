@@ -19,7 +19,10 @@ def articles():
     # print(articles[0]['title']) 콘솔창에 잘 뜨는지 확인
     return render_template("articles.html", articles = articles) 
 
-
+@app.route('/article/<int:id>') #params를 써먹음...params..? <>를하고 변수를 이용한다.
+def article(id):
+    print(id)
+    return "Success"
 
 if __name__ == '__main__': # 처음 서버 띄울때 쓰임.
     app.run()
