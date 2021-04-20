@@ -925,5 +925,11 @@
     <script src="js/demo/datatables-demo.js"></script>
 
 </body>
-
+    {% for article in articles %}
+    <ol>{{article[0]}}</ol>
+    <ol>{{article[1]}}</ol>
+    <ol>{{article[2]}}</ol>
+    <ol>{{article[3]}}</ol>
+    <ol>{{article[4]}}</ol>
+    {% endfor %}
 </html>
