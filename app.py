@@ -97,8 +97,10 @@ def edit(id):
     if request.method == "POST":
         title = request.form['title']
         desc = request.form['desc']
-        sql = 'UPDATE topic SET title = %s, body = %s WHERE id = {};'.format(id)
-        input_data = [title, desc]
+        author = request.form['author']
+        print(id)
+        sql = 'UPDATE topic SET title = %s, body = %s, author = %s WHERE id = {};'.format(id)
+        input_data = [title, desc, author]
         cursor.execute(sql, input_data)
         db.commit()
         print(request.form['title'])
@@ -110,6 +112,7 @@ def edit(id):
         topic = cursor.fetchone()
         # print(topic[1])
         return render_template("edit_article.html", article = topic)
+
 
 
 if __name__ == '__main__': # 처음 서버 띄울때 쓰임.
