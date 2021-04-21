@@ -1,6 +1,7 @@
 from flask import Flask , render_template, request, redirect # flask에 있는 request갖고오기
 from data import Articles
 import pymysql
+from passlib.hash import sha256_crypt
 
 app = Flask(__name__)
 app.debug = True
@@ -113,7 +114,60 @@ def edit(id):
         # print(topic[1])
         return render_template("edit_article.html", article = topic)
 
+@app.route('/register', methods=["GET", 'POST'])
+def register():
+    cursor = db.cursor()
+    print('a')
+    if request.method == "POST": 
+        name = request.form['name']
+        email = request.form['email']
+        username = request.form['username']
+        userpw = sha256_crypt.encrypt(request.form['userpw'])
+        sql = "INSERT INTO users (name, email, username, password) VALUES (%s, %s, %s, %s);"
+        input_data = [name, email, username, userpw]
+        cursor.execute(sql, input_data)
+        db.commit()
 
+        return redirect('/articles')
+
+    else:
+        return render_template("register.html")
+
+    # if request.method == "POST":  내가한거
+    #     print('b')
+    #     name = request.form['name']
+    #     email = request.form['email']
+    #     username = request.form['username']
+    #     password = request.form['password']
+    #     sql = "INSERT INTO `users` (`name`, `email`, `username`, `password`) VALUES (%s, %s, %s, %s);"
+    #     input_data = [name, email, username, password]
+    #     cursor.execute(sql, input_data)
+    #     db.commit()
+
+    #     return redirect("/") 
+
+    # else:
+    #     print('c')
+    #     return render_template("register2.html")
+            
+@app.route('/login', methods = ['GET', "POST"])
+def ligin():
+    cursor = db.cursor()
+    if request.method == "POST":
+        usersname = request.form['username']
+        userpw_1 = request.form['userpw']
+        # print(userpw_1)
+        # print(request.form['username'])
+        sql = 'SELECT password FROM users WHERE email = %s;'
+        input_data = [usersname]
+        cursor.execute(sql, input_data)
+        userpw = cursor.fetchone()
+        # print(userpw)
+        print(userpw[0])
+        if sha256_crypt.verify(userpw_1, userpw[0]):
+            return "Success"
+        else:
+            return userpw[0]
 
 if __name__ == '__main__': # 처음 서버 띄울때 쓰임.
     app.run() 
